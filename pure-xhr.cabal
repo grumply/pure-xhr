@@ -1,0 +1,43 @@
+name:                pure-xhr
+version:             0.8.0.0
+homepage:            purehs.org/doc/pure-xhr
+license:             BSD3
+license-file:        LICENSE
+author:              Sean Hickman
+maintainer:          sean@grumply.com
+category:            Web
+build-type:          Simple
+cabal-version:       >=1.10
+
+source-repository head
+  type: git
+  location: https://github.com/grumply/pure-xhr.git
+
+library
+  build-depends:
+    base,
+    pure-lifted,
+    pure-txt,
+    pure-json,
+    pure-uri
+
+  hs-source-dirs: src
+
+  exposed-modules:
+    Pure.XHR
+    Pure.XHR.Utils
+
+  if (impl(ghcjs))
+    other-modules:
+      Pure.XHR.GHCJS
+
+  else
+    build-depends:
+      lens,
+      wreq
+
+    other-modules:
+      Pure.XHR.GHC
+
+
+  default-language: Haskell2010
