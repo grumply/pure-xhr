@@ -6,6 +6,23 @@ import Pure.XHR.Utils
 import Pure.Data.JSON
 import Pure.Data.Txt
 
+get :: FromJSON a => Txt -> IO (Either XHRError a)
+get _ = pure (Left GHCNotSupported)
+
+getRaw :: Txt -> IO (Either XHRError Txt)
+getRaw _ = pure (Left GHCNotSupported)
+
+post :: (ToJSON a,FromJSON b) => Txt -> a -> IO (Either XHRError b)
+post _ _ = pure (Left GHCNotSupported)
+
+postForm :: (FromJSON b) => Txt -> [(Txt,Txt)] -> IO (Either XHRError b)
+postForm _ _ = pure (Left GHCNotSupported)
+
+postFormRaw :: Txt -> [(Txt,Txt)] -> IO (Either XHRError Txt)
+postFormRaw _ _ = pure (Left GHCNotSupported)
+
+-- This implementation is far too expensive in terms of dependencies.
+{-
 import Control.Lens ((^.))
 import Network.Wreq as Wreq
 
@@ -69,5 +86,4 @@ postFormRaw url payload = do
             | otherwise                 -> Left (StatusError url code)
   where
     params = fmap (\(k,v) -> fromTxt k := v) payload
-
-
+-}

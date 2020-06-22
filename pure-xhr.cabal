@@ -32,12 +32,11 @@ library
       Pure.XHR.GHCJS
 
   else
-    build-depends:
-      lens,
-      wreq
+    -- build-depends:
+    --  lens,
+    --  wreq
 
     other-modules:
       Pure.XHR.GHC
-
 
   default-language: Haskell2010

@@ -10,6 +10,7 @@ data XHRError
   | ParseError Txt String
   | InvalidURLError Txt Txt
   | OtherError Txt SomeException
+  | GHCNotSupported
 
 xhrErrorURL :: XHRError -> Txt
 xhrErrorURL (StatusError     u _) = u
