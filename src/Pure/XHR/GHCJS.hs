@@ -77,10 +77,10 @@ getRaw url = do
             | otherwise -> 
               putMVar mv $ Left (StatusError url s)
       _ -> pure ()
-  set_request_header_js xhr "Content-Type" "application/json"
-  set_request_header_js xhr "Accept" "*/*"
   on_ready_js xhr cb
   open_get_js xhr url
+  set_request_header_js xhr "Content-Type" "application/json"
+  set_request_header_js xhr "Accept" "*/*"
   send_js xhr
   ma <- takeMVar mv
   ma `seq` releaseCallback cb
@@ -110,10 +110,10 @@ postRaw url payload = do
             | otherwise -> 
               putMVar mv $ Left (StatusError url s)
       _ -> pure ()
-  set_request_header_js xhr "Content-Type" "application/json"
-  set_request_header_js xhr "Accept" "*/*"
   on_ready_js xhr cb
   open_post_js xhr url
+  set_request_header_js xhr "Content-Type" "application/json"
+  set_request_header_js xhr "Accept" "*/*"
   send_with_js xhr payload
   ma <- takeMVar mv
   ma `seq` releaseCallback cb
@@ -143,10 +143,10 @@ postFormRaw url payload = do
             | otherwise -> 
               putMVar mv $ Left (StatusError url s)
       _ -> pure ()
-  set_request_header_js xhr "Content-Type" "application/x-www-form-urlencoded"
-  set_request_header_js xhr "Accept" "*/*"
   on_ready_js xhr cb
   open_post_js xhr url
+  set_request_header_js xhr "Content-Type" "application/x-www-form-urlencoded"
+  set_request_header_js xhr "Accept" "*/*"
   send_with_js xhr params
   ma <- takeMVar mv
   ma `seq` releaseCallback cb
