@@ -15,6 +15,9 @@ getRaw _ = pure (Left GHCNotSupported)
 post :: (ToJSON a,FromJSON b) => Txt -> a -> IO (Either XHRError b)
 post _ _ = pure (Left GHCNotSupported)
 
+postRaw :: Txt -> Txt -> IO (Either XHRError Txt)
+postRaw _ _ = pure (Left GHCNotSupported)
+
 postForm :: (FromJSON b) => Txt -> [(Txt,Txt)] -> IO (Either XHRError b)
 postForm _ _ = pure (Left GHCNotSupported)
 

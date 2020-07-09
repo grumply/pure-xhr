@@ -1,5 +1,5 @@
 {-# language OverloadedStrings #-}
-module Pure.XHR.GHCJS (get,getRaw,post,postForm,postFormRaw) where
+module Pure.XHR.GHCJS (get,getRaw,post,postRaw,postForm,postFormRaw) where
 
 import Pure.XHR.Utils
 
