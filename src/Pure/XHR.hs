@@ -1,5 +1,5 @@
 {-# language CPP #-}
-module Pure.XHR (get,getRaw,post,postRaw,postForm,postFormRaw,module Utils) where
+module Pure.XHR (get,getWith,getRaw,post,postWith,postRaw,postForm,postFormWith,postFormRaw,module Utils) where
 
 #ifdef __GHCJS__
 import Pure.XHR.GHCJS

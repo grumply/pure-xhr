@@ -11,6 +11,7 @@ data XHRError
   | InvalidURLError Txt Txt
   | OtherError Txt SomeException
   | GHCNotSupported
+  deriving (Show)
 
 xhrErrorURL :: XHRError -> Txt
 xhrErrorURL (StatusError     u _) = u
