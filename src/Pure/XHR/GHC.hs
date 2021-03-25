@@ -9,7 +9,7 @@ import Pure.Data.Txt
 get :: FromJSON b => Txt -> IO (Either XHRError b)
 get _ = pure (Left GHCNotSupported)
 
-getWith :: FrmJSON b => Txt -> [(Txt,Txt)] -> IO (Either XHRError b)
+getWith :: FromJSON b => Txt -> [(Txt,Txt)] -> IO (Either XHRError b)
 getWith _ _ = pure (Left GHCNotSupported)
 
 getRaw :: [(Txt,Txt)] -> Txt -> IO (Either XHRError Txt)
