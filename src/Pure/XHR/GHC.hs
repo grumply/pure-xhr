@@ -9,20 +9,29 @@ import Pure.Data.Txt
 get :: FromJSON a => Txt -> IO (Either XHRError a)
 get _ = pure (Left GHCNotSupported)
 
-getRaw :: Txt -> IO (Either XHRError Txt)
-getRaw _ = pure (Left GHCNotSupported)
+getWith :: Txt -> [(Txt,Txt)] -> IO (Either XHRError Txt)
+getWith _ _ = pure (Left GHCNotSupported)
+
+getRaw :: [(Txt,Txt)] -> Txt -> IO (Either XHRError Txt)
+getRaw _ _ = pure (Left GHCNotSupported)
 
 post :: (ToJSON a,FromJSON b) => Txt -> a -> IO (Either XHRError b)
 post _ _ = pure (Left GHCNotSupported)
 
-postRaw :: Txt -> Txt -> IO (Either XHRError Txt)
-postRaw _ _ = pure (Left GHCNotSupported)
+postWith :: (ToJSON a, FromJSON b) => Txt -> [(Txt,Txt)] -> a -> IO (Either XHRError b)
+postWith _ _ _ = pure (Left GHCNotSupported)
+
+postRaw :: Txt -> [(Txt,Txt)] -> Txt -> IO (Either XHRError Txt)
+postRaw _ _ _ = pure (Left GHCNotSupported)
 
 postForm :: (FromJSON b) => Txt -> [(Txt,Txt)] -> IO (Either XHRError b)
 postForm _ _ = pure (Left GHCNotSupported)
 
-postFormRaw :: Txt -> [(Txt,Txt)] -> IO (Either XHRError Txt)
-postFormRaw _ _ = pure (Left GHCNotSupported)
+postFormWith :: FromJSON a => Txt -> [(Txt,Txt)] -> [(Txt,Txt)] -> IO (Either XHRError a)
+postFormWith _ _ _ = pure (Left GHCNotSupported)
+
+postFormRaw :: Txt -> [(Txt,Txt)] -> [(Txt,Txt)] -> IO (Either XHRError Txt)
+postFormRaw _ _ _ = pure (Left GHCNotSupported)
 
 -- This implementation is far too expensive in terms of dependencies.
 {-

@@ -1,5 +1,5 @@
 {-# language OverloadedStrings #-}
-module Pure.XHR.GHCJS (get,getRaw,post,postRaw,postForm,postFormRaw) where
+module Pure.XHR.GHCJS (get,getWith,getRaw,post,postWith,postRaw,postForm,postFormWith,postFormRaw) where
 
 import Pure.XHR.Utils
 
@@ -54,15 +54,18 @@ foreign import javascript unsafe
     response_text_js :: XHR -> IO Txt
 
 get :: FromJSON a => Txt -> IO (Either XHRError a)
-get url = do
-  ext <- getRaw url
+get url = getWith url [] 
+
+getWith :: FromJSON a => Txt -> [(Txt,Txt)] -> IO (Either XHRError a)
+getWith url headers = do
+  ext <- getRaw headers url
   pure $
     case ext of
       Left e  -> Left e
       Right t -> either (Left . ParseError url) Right (decodeEither t)
 
-getRaw :: Txt -> IO (Either XHRError Txt)
-getRaw url = do
+getRaw :: [(Txt,Txt)] -> Txt -> IO (Either XHRError Txt)
+getRaw headers url = do
   xhr <- new_xhr_js
   mv  <- newEmptyMVar
   cb  <- syncCallback1 ContinueAsync $ \_ -> do
@@ -81,21 +84,25 @@ getRaw url = do
   open_get_js xhr url
   set_request_header_js xhr "Content-Type" "application/json"
   set_request_header_js xhr "Accept" "*/*"
+  for_ headers $ \(h,v) -> set_request_header_js xhr h v
   send_js xhr
   ma <- takeMVar mv
   ma `seq` releaseCallback cb
   pure ma
 
 post :: (ToJSON a, FromJSON b) => Txt -> a -> IO (Either XHRError b)
-post url payload = do
-  ext <- postRaw url (encode payload)
+post url payload = postWith url [] payload
+
+postWith :: (ToJSON a, FromJSON b) => Txt -> [(Txt,Txt)] -> a -> IO (Either XHRError b)
+postWith url headers payload = do
+  ext <- postRaw url headers (encode payload)
   pure $
     case ext of
       Left e  -> Left e
       Right t -> either (Left . ParseError url) Right (decodeEither t)
 
-postRaw :: Txt -> Txt -> IO (Either XHRError Txt)
-postRaw url payload = do
+postRaw :: Txt -> [(Txt,Txt)] -> Txt -> IO (Either XHRError Txt)
+postRaw url headers payload = do
   xhr <- new_xhr_js
   mv  <- newEmptyMVar
   cb  <- syncCallback1 ContinueAsync $ \_ -> do
@@ -114,21 +121,25 @@ postRaw url payload = do
   open_post_js xhr url
   set_request_header_js xhr "Content-Type" "application/json"
   set_request_header_js xhr "Accept" "*/*"
+  for_ headers $ \(h,v) -> set_request_header_js xhr h v
   send_with_js xhr payload
   ma <- takeMVar mv
   ma `seq` releaseCallback cb
   pure ma
 
 postForm :: FromJSON a => Txt -> [(Txt,Txt)] -> IO (Either XHRError a)
-postForm url payload = do
-  ext <- postFormRaw url payload
+postForm url payload = postFormWith url [] payload
+
+postFormWith :: FromJSON a => Txt -> [(Txt,Txt)] -> [(Txt,Txt)] -> IO (Either XHRError a)
+postFormWith url headers payload = do
+  ext <- postFormRaw url headers payload
   pure $
     case ext of
       Left e  -> Left e
       Right t -> either (Left . ParseError url) Right (decodeEither t)
 
-postFormRaw :: Txt -> [(Txt,Txt)] -> IO (Either XHRError Txt)
-postFormRaw url payload = do
+postFormRaw :: Txt -> [(Txt,Txt)] -> [(Txt,Txt)] -> IO (Either XHRError Txt)
+postFormRaw url headers payload = do
   xhr <- new_xhr_js
   mv  <- newEmptyMVar
   cb  <- syncCallback1 ContinueAsync $ \_ -> do
@@ -147,6 +158,7 @@ postFormRaw url payload = do
   open_post_js xhr url
   set_request_header_js xhr "Content-Type" "application/x-www-form-urlencoded"
   set_request_header_js xhr "Accept" "*/*"
+  for_ headers $ \(h,v) -> set_request_header_js xhr h v
   send_with_js xhr params
   ma <- takeMVar mv
   ma `seq` releaseCallback cb
