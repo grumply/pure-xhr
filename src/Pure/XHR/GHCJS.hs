@@ -54,7 +54,7 @@ foreign import javascript unsafe
     response_text_js :: XHR -> IO Txt
 
 get :: FromJSON a => Txt -> IO (Either XHRError a)
-get url = getWith url [] 
+get url = getWith url [("Content-Type","application/json"),("Accept","*/*")] 
 
 getWith :: FromJSON a => Txt -> [(Txt,Txt)] -> IO (Either XHRError a)
 getWith url headers = do
@@ -82,8 +82,6 @@ getRaw headers url = do
       _ -> pure ()
   on_ready_js xhr cb
   open_get_js xhr url
-  set_request_header_js xhr "Content-Type" "application/json"
-  set_request_header_js xhr "Accept" "*/*"
   for_ headers $ \(h,v) -> set_request_header_js xhr h v
   send_js xhr
   ma <- takeMVar mv
@@ -91,7 +89,7 @@ getRaw headers url = do
   pure ma
 
 post :: (ToJSON a, FromJSON b) => Txt -> a -> IO (Either XHRError b)
-post url payload = postWith url [] payload
+post url payload = postWith url [("Content-Type","application/json"),("Accept","application/json")] payload
 
 postWith :: (ToJSON a, FromJSON b) => Txt -> [(Txt,Txt)] -> a -> IO (Either XHRError b)
 postWith url headers payload = do
@@ -119,8 +117,6 @@ postRaw url headers payload = do
       _ -> pure ()
   on_ready_js xhr cb
   open_post_js xhr url
-  set_request_header_js xhr "Content-Type" "application/json"
-  set_request_header_js xhr "Accept" "*/*"
   for_ headers $ \(h,v) -> set_request_header_js xhr h v
   send_with_js xhr payload
   ma <- takeMVar mv
@@ -128,7 +124,7 @@ postRaw url headers payload = do
   pure ma
 
 postForm :: FromJSON a => Txt -> [(Txt,Txt)] -> IO (Either XHRError a)
-postForm url payload = postFormWith url [] payload
+postForm url payload = postFormWith url [("Content-Type","application/x-www-form-urlencoded"),("Accept","application/json")] payload
 
 postFormWith :: FromJSON a => Txt -> [(Txt,Txt)] -> [(Txt,Txt)] -> IO (Either XHRError a)
 postFormWith url headers payload = do
@@ -156,8 +152,6 @@ postFormRaw url headers payload = do
       _ -> pure ()
   on_ready_js xhr cb
   open_post_js xhr url
-  set_request_header_js xhr "Content-Type" "application/x-www-form-urlencoded"
-  set_request_header_js xhr "Accept" "*/*"
   for_ headers $ \(h,v) -> set_request_header_js xhr h v
   send_with_js xhr params
   ma <- takeMVar mv
